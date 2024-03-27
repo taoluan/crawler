@@ -52,10 +52,8 @@ class ProductController extends Controller
                 "nameRoot" => $store
             ]);
             if (!$newStore->wasRecentlyCreated) {
-                return response()->json([
-                    "status"  => true,
-                    'message' => "Saved",
-                ]);
+                // crawled before so redirect to page product
+                return redirect($store);
             }
             for ($page = 1; $page <= $totalPage; $page++) {
                 if ($page !== 1) {
@@ -79,10 +77,9 @@ class ProductController extends Controller
             }
             Product::insert($filterProducts);
             DB::commit();
-            return response()->json([
-                "status" => true,
-                "data"   => $filterProducts,
-            ]);
+
+            // crawled success so redirect to page product
+            return redirect($store);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
